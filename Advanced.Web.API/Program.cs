@@ -45,6 +45,7 @@ if (app.Environment.IsDevelopment())
 
     SwaggerConfigurationHelper.ConfigureSwaggerUI(app);
 }
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
