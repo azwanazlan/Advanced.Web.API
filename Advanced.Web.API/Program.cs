@@ -1,9 +1,7 @@
+using Advanced.Web.Api.Helper;
 using Advanced.Web.Api.Models;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,11 +27,8 @@ builder.Services.AddVersionedApiExplorer(options =>
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Advanced Web API - V1", Version = "v1" });
-    c.SwaggerDoc("v2", new OpenApiInfo { Title = "Advanced Web API - V2", Version = "v2" });
-});
+
+SwaggerConfigurationHelper.ConfigureSwaggerGen(builder.Services);
 
 //builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
@@ -43,19 +38,13 @@ builder.Services.AddDbContext<ShopContext>(options =>
 });
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint($"/swagger/v1/swagger.json", $"v1");
-        c.SwaggerEndpoint($"/swagger/v2/swagger.json", $"v2");
-    });
+
+    SwaggerConfigurationHelper.ConfigureSwaggerUI(app);
 }
-
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
